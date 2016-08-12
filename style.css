@@ -6,11 +6,11 @@ body{
 }
 .mainSearch{
     position: absolute;
-    top: 250px;
+    top: 26vh;
     left: 15%;
 }
 .buttonWrap{
     position: absolute;
-    top: 42%;
+    top: 26vh;
     left: 64%;
 }
