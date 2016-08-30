@@ -14,7 +14,44 @@ app.config(function($routeProvider){
             redirectTo: "/"
         })
 });
-app.controller('mainController', function($http, $log){
+app.factory("recipe_list_data", function($http, $q){
+    var service = {};
+    var baseUrl = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?cuisine=french&limitLicense=false&number=25';
+    var url = '';
+    //var searchTerm = '';
+
+
+    // var makeUrl = function(){
+    //     url = baseUrl + searchTerm;
+    // };
+
+    // service.setSearch = function(s){
+    //     searchTerm = s;
+    //     makeUrl();
+    // };
+
+    service.callSpoonacularData = function(){
+        var defer = $q.defer();
+        $http({
+            url: 'spoonacular_results.js',
+            method: 'get',
+            dataType: 'json'
+            // headers: {
+            //     "Content-Type": "X-My-Favorite-Field"
+            // }
+        }).then(function(response){
+            console.log("success");
+            data = response.data;
+            defer.resolve(data);
+
+        }, function(response){
+            defer.reject(reponse);
+        });
+        return defer.promise;
+    };
+    return service;
+});
+app.controller('mainController', function($http, $log, recipe_list_data){
     $log.info("I am ready to load!");
 
     this.spoonacularData = [];
@@ -25,13 +62,9 @@ app.controller('mainController', function($http, $log){
 
     this.getSpoonacularData = function(){
         var self = this;
-        $http({
-            url: 'spoonacular_results.js', //'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?cuisine=french&limitLicense=false&number=25'
-            method: 'get',
-            dataType: 'json'
-        }).then (function (response){
-            $log.log('success: ', response);
-            self.spoonacularData = response.data.results;
+        recipe_list_data.callSpoonacularData().then (function (data){
+            $log.log('success: ', data);
+            self.spoonacularData = data.results;
             $log.log('spoonacularData: ', self.spoonacularData);
         });
     };
