@@ -13,3 +13,10 @@ div.container-fluid{
 .btn{
     margin-right: 5px;
 }
+.white-text {
+	color: white;
+}
+
+.list-group-item.salmon {
+	background-color: salmon;
+}
